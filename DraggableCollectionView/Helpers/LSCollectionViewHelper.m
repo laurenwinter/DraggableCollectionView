@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
                              context:&kObservingCollectionViewLayoutContext];
         _scrollingEdgeInsets = UIEdgeInsetsMake(50.0f, 50.0f, 50.0f, 50.0f);
         _scrollingSpeed = 300.f;
+        _destinationView = collectionView;
         
         _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc]
                                        initWithTarget:self
@@ -239,8 +240,11 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
             [mockCell removeFromSuperview];
             mockCell = [[UIImageView alloc] initWithFrame:cell.frame];
             mockCell.image = [self imageFromCell:cell];
-            mockCenter = mockCell.center;
-            [self.collectionView addSubview:mockCell];
+            
+            CGPoint centerDestinagePoint = [_collectionView convertPoint:mockCell.center toView:_destinationView];
+            mockCell.center = centerDestinagePoint;
+            mockCenter = centerDestinagePoint;
+            [_destinationView addSubview:mockCell];
 			if ([self.collectionView.dataSource respondsToSelector:@selector(collectionView:transformForDraggingItemAtIndexPath:duration:)]) {
 				NSTimeInterval duration = 0.3;
 				CGAffineTransform transform = [(id<UICollectionViewDataSource_Draggable>)self.collectionView.dataSource collectionView:self.collectionView transformForDraggingItemAtIndexPath:indexPath duration:&duration];
@@ -278,7 +282,9 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
             [UIView
              animateWithDuration:0.3
              animations:^{
-                 mockCell.center = layoutAttributes.center;
+                 CGPoint centerDestinagePoint = [_collectionView convertPoint:layoutAttributes.center toView:_destinationView];
+                 mockCell.center = centerDestinagePoint;
+                 
                  mockCell.transform = CGAffineTransformMakeScale(1.f, 1.f);
              }
              completion:^(BOOL finished) {

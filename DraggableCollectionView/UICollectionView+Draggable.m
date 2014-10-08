@@ -50,4 +50,13 @@
     [self getHelper].scrollingSpeed = scrollingSpeed;
 }
 
+- (UIView*)destinationView
+{
+    return [self getHelper].destinationView;
+}
+
+- (void)setDestinationView:(UIView *)destinationView
+{
+    [self getHelper].destinationView = destinationView;
+}
 @end

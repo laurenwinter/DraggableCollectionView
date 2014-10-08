@@ -21,7 +21,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    _collectionView.destinationView = self.view;
     sections = [[NSMutableArray alloc] initWithCapacity:ITEM_COUNT];
     for(int s = 0; s < SECTION_COUNT; s++) {
         NSMutableArray *data = [[NSMutableArray alloc] initWithCapacity:ITEM_COUNT];

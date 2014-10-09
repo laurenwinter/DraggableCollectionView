@@ -69,4 +69,9 @@
 {
     [[self getHelper] deleteSelectedCell];
 }
+
+- (void)insertAfterSelectedCell
+{
+    [[self getHelper] insertAfterSelectedCell];
+}
 @end

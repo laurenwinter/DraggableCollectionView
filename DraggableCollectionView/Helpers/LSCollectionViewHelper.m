@@ -474,33 +474,28 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
 
 - (void)deleteSelectedCell
 {
-//    [self.collectionView performBatchUpdates:^{
-//        self.layoutHelper.hideIndexPath = nil;
-//        [self.collectionView.collectionViewLayout invalidateLayout];
-//    } completion:nil];
-    
+    [mockCell removeFromSuperview];
+    mockCell = nil;
     [self.collectionView performBatchUpdates:^{
         self.layoutHelper.hideIndexPath = nil;
         
         NSArray* itemPaths = @[_selectedIndexPath];
-        // Now delete the items from the collection view.
         [self.collectionView deleteItemsAtIndexPaths:itemPaths];
+        _selectedIndexPath = nil;
     } completion:nil];
-    
+}
+
+- (void)insertAfterSelectedCell
+{
     [mockCell removeFromSuperview];
     mockCell = nil;
-    
-//    if (_selectedIndexPath) {
-//        [self.collectionView performBatchUpdates:^{
-//            //[self.collectionView moveItemAtIndexPath:self.layoutHelper.fromIndexPath toIndexPath:self.layoutHelper.toIndexPath];
-//            [mockCell removeFromSuperview];
-//            mockCell = nil;
-//            NSIndexPath *toPath = [NSIndexPath indexPathForRow:_selectedIndexPath.row-1 inSection:_selectedIndexPath.section]; ;
-//            self.layoutHelper.toIndexPath = toPath;
-//            [self.collectionView.collectionViewLayout invalidateLayout];
-//            _selectedIndexPath = nil;
-//        } completion:nil];
-//    }
+    [self.collectionView performBatchUpdates:^{
+        self.layoutHelper.hideIndexPath = nil;
+        
+        NSArray* itemPaths = @[_selectedIndexPath];
+        [self.collectionView insertItemsAtIndexPaths:itemPaths];
+        _selectedIndexPath = nil;
+    } completion:nil];
 }
 
 @end

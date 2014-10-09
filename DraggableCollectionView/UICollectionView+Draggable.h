@@ -16,4 +16,6 @@
 @property (nonatomic, assign) NSIndexPath *selectedIndexPath;
 
 - (void)deleteSelectedCell;
+- (void)insertAfterSelectedCell;
+
 @end

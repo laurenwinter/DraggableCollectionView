@@ -108,16 +108,25 @@
 
 - (void)deleteTapHandler:(UITapGestureRecognizer *)sender
 {
-
+    // First, delete the cell data
     NSIndexPath *selectedPath = _collectionView.selectedIndexPath;
     [sections[selectedPath.section] removeObjectAtIndex:selectedPath.row];
     
+    // Update the collection view
     [self.collectionView deleteSelectedCell];
 }
 
 - (void)duplicateTapHandler:(UITapGestureRecognizer *)sender
 {
+    NSIndexPath *selectedPath = _collectionView.selectedIndexPath;
+    NSMutableArray *sectionData = [sections objectAtIndex:selectedPath.section];
     
+    // Copy and insert the cell data
+    NSString *cellData = [sectionData objectAtIndex:selectedPath.item];
+    [sectionData insertObject:cellData atIndex:selectedPath.row];
+    
+    // Update the collection view
+    [self.collectionView insertAfterSelectedCell];
 }
 
 - (UIImage *)imageFromCell:(UICollectionViewCell *)cell {

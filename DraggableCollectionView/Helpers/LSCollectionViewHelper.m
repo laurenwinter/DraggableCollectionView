@@ -110,7 +110,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
 }
 
 - (UIImage *)imageFromCell:(UICollectionViewCell *)cell {
-    UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
+    UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 1.0);
 	[cell.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -238,13 +238,28 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
             UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
             cell.highlighted = NO;
             [mockCell removeFromSuperview];
-            mockCell = [[UIImageView alloc] initWithFrame:cell.frame];
-            mockCell.image = [self imageFromCell:cell];
+            if ([self.collectionView.dataSource respondsToSelector:@selector(collectionView:createMockCell:)]) {
+                mockCell = [(id<UICollectionViewDataSource_Draggable>)self.collectionView.dataSource collectionView:self.collectionView createMockCell:indexPath];
+            } else {
+                mockCell = [[UIImageView alloc] initWithFrame:cell.frame];
+                mockCell.image = [self imageFromCell:cell];
+            }
             
             CGPoint centerDestinagePoint = [_collectionView convertPoint:mockCell.center toView:_destinationView];
             mockCell.center = centerDestinagePoint;
             mockCenter = centerDestinagePoint;
+            
+            UITapGestureRecognizer * deselectTap = [[UITapGestureRecognizer alloc]
+                                                  initWithTarget:self
+                                                  action:@selector(deselectTapHandler:)];
+            [mockCell addGestureRecognizer:deselectTap];
+            mockCell.userInteractionEnabled = YES;
             [_destinationView addSubview:mockCell];
+            [UIView animateWithDuration:0.15 animations:^{
+                     CGAffineTransform transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.15, 1.15);
+                     mockCell.transform = transform;
+            }];
+
 			if ([self.collectionView.dataSource respondsToSelector:@selector(collectionView:transformForDraggingItemAtIndexPath:duration:)]) {
 				NSTimeInterval duration = 0.3;
 				CGAffineTransform transform = [(id<UICollectionViewDataSource_Draggable>)self.collectionView.dataSource collectionView:self.collectionView transformForDraggingItemAtIndexPath:indexPath duration:&duration];
@@ -276,7 +291,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
                 self.layoutHelper.fromIndexPath = nil;
                 self.layoutHelper.toIndexPath = nil;
             } completion:nil];
-            
+
             // Switch mock for cell
             UICollectionViewLayoutAttributes *layoutAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.layoutHelper.hideIndexPath];
             [UIView
@@ -287,12 +302,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
                  
                  mockCell.transform = CGAffineTransformMakeScale(1.f, 1.f);
              }
-             completion:^(BOOL finished) {
-                 [mockCell removeFromSuperview];
-                 mockCell = nil;
-                 self.layoutHelper.hideIndexPath = nil;
-                 [self.collectionView.collectionViewLayout invalidateLayout];
-             }];
+             completion:^(BOOL finished) {}];
             
             // Reset
             [self invalidatesScrollTimer];
@@ -320,6 +330,41 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
         self.layoutHelper.hideIndexPath = indexPath;
         self.layoutHelper.toIndexPath = indexPath;
     } completion:nil];
+}
+
+- (void)deselectTapHandler:(UITapGestureRecognizer *)sender
+{
+    // Tell the data source to move the item
+    [(id<UICollectionViewDataSource_Draggable>)self.collectionView.dataSource collectionView:self.collectionView
+                                                                         moveItemAtIndexPath:self.layoutHelper.fromIndexPath
+                                                                                 toIndexPath:self.layoutHelper.toIndexPath];
+    
+    // Move the item
+    [self.collectionView performBatchUpdates:^{
+        [self.collectionView moveItemAtIndexPath:self.layoutHelper.fromIndexPath toIndexPath:self.layoutHelper.toIndexPath];
+        self.layoutHelper.fromIndexPath = nil;
+        self.layoutHelper.toIndexPath = nil;
+    } completion:nil];
+    
+    // Switch mock for cell
+    UICollectionViewLayoutAttributes *layoutAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.layoutHelper.hideIndexPath];
+    [UIView
+     animateWithDuration:0.3
+     animations:^{
+         CGPoint centerDestinagePoint = [_collectionView convertPoint:layoutAttributes.center toView:_destinationView];
+         mockCell.center = centerDestinagePoint;
+         mockCell.transform = CGAffineTransformMakeScale(1.f, 1.f);
+     }
+     completion:^(BOOL finished) {
+         [mockCell removeFromSuperview];
+         mockCell = nil;
+         self.layoutHelper.hideIndexPath = nil;
+         [self.collectionView.collectionViewLayout invalidateLayout];
+     }];
+    
+    // Reset
+    [self invalidatesScrollTimer];
+    lastIndexPath = nil;
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)sender

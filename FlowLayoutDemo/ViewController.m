@@ -21,7 +21,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _collectionView.destinationView = self.view;
+    //_collectionView.destinationView = self.view;
     sections = [[NSMutableArray alloc] initWithCapacity:ITEM_COUNT];
     for(int s = 0; s < SECTION_COUNT; s++) {
         NSMutableArray *data = [[NSMutableArray alloc] initWithCapacity:ITEM_COUNT];
@@ -48,6 +48,7 @@
     NSMutableArray *data = [sections objectAtIndex:indexPath.section];
     
     cell.label.text = [data objectAtIndex:indexPath.item];
+    cell.backgroundColor = [UIColor orangeColor];
     
     return cell;
 }
@@ -74,6 +75,51 @@
     
     [data1 removeObjectAtIndex:fromIndexPath.item];
     [data2 insertObject:index atIndex:toIndexPath.item];
+}
+
+- (UIImageView *)collectionView:(UICollectionView *)collectionView createMockCell:(NSIndexPath *)indexPath {
+    Cell *cell = (Cell*)[collectionView cellForItemAtIndexPath:indexPath];
+    UIImageView *mockCell = [[UIImageView alloc] initWithFrame:cell.frame];
+    mockCell.image = [self imageFromCell:cell];
+    
+    // Add the delete button
+    UIImageView *deleteControl = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 36.0, 36.0)];
+    deleteControl.backgroundColor = [UIColor clearColor];
+    deleteControl.image = [UIImage imageNamed:@"editor-delete-sticker"];
+    deleteControl.userInteractionEnabled = YES;
+    UITapGestureRecognizer * deleteTap = [[UITapGestureRecognizer alloc]
+                                          initWithTarget:self
+                                          action:@selector(deleteTapHandler:)];
+    [deleteControl addGestureRecognizer:deleteTap];
+    [mockCell addSubview:deleteControl];
+    
+    // Add the duplicate button
+    UIImageView *duplicateControl = [[UIImageView alloc]initWithFrame:CGRectMake(mockCell.frame.size.width - 36.0, 0, 36.0, 36.0)];
+    duplicateControl.backgroundColor = [UIColor clearColor];
+    duplicateControl.image = [UIImage imageNamed:@"editor-duplicate-tool"];
+    duplicateControl.userInteractionEnabled = YES;
+    UITapGestureRecognizer * duplicateTap = [[UITapGestureRecognizer alloc]
+                                             initWithTarget:self
+                                             action:@selector(duplicateTapHandler:)];
+    [duplicateControl addGestureRecognizer:duplicateTap];
+    [mockCell addSubview:duplicateControl];
+    return mockCell;
+}
+
+- (void)deleteTapHandler:(UITapGestureRecognizer *)sender
+{
+}
+
+- (void)duplicateTapHandler:(UITapGestureRecognizer *)sender
+{
+}
+
+- (UIImage *)imageFromCell:(UICollectionViewCell *)cell {
+    UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 1.0);
+    [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end

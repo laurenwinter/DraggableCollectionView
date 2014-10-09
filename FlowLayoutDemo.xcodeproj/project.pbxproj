@@ -25,6 +25,8 @@
 		8E947CE217545C370077D957 /* LSCollectionViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E947CDF17545C370077D957 /* LSCollectionViewHelper.m */; };
 		8E947CE317545C370077D957 /* LSCollectionViewLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E947CE117545C370077D957 /* LSCollectionViewLayoutHelper.m */; };
 		8E955E881793ADF5008F72D9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E955E871793ADF5008F72D9 /* QuartzCore.framework */; };
+		BBA75E5019E603BF003049B7 /* editor-delete-sticker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BBA75E4F19E603BF003049B7 /* editor-delete-sticker@2x.png */; };
+		BBA75E5219E60825003049B7 /* editor-duplicate-tool@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BBA75E5119E60825003049B7 /* editor-duplicate-tool@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +60,8 @@
 		8E947CE017545C370077D957 /* LSCollectionViewLayoutHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSCollectionViewLayoutHelper.h; sourceTree = "<group>"; };
 		8E947CE117545C370077D957 /* LSCollectionViewLayoutHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSCollectionViewLayoutHelper.m; sourceTree = "<group>"; };
 		8E955E871793ADF5008F72D9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BBA75E4F19E603BF003049B7 /* editor-delete-sticker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "editor-delete-sticker@2x.png"; sourceTree = "<group>"; };
+		BBA75E5119E60825003049B7 /* editor-duplicate-tool@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "editor-duplicate-tool@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +141,7 @@
 		8E947CC81754593B0077D957 /* DraggableCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				BBA75E4E19E603BF003049B7 /* Resources */,
 				8E947CDD17545C370077D957 /* Helpers */,
 				8E947CD917545C100077D957 /* Layout */,
 				8E947CCD1754593B0077D957 /* UICollectionView+Draggable.h */,
@@ -165,6 +170,15 @@
 				8E947CE117545C370077D957 /* LSCollectionViewLayoutHelper.m */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		BBA75E4E19E603BF003049B7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BBA75E5119E60825003049B7 /* editor-duplicate-tool@2x.png */,
+				BBA75E4F19E603BF003049B7 /* editor-delete-sticker@2x.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,8 +235,10 @@
 				8E947CB5175458980077D957 /* Default.png in Resources */,
 				8E947CB7175458980077D957 /* Default@2x.png in Resources */,
 				8E947CB9175458980077D957 /* Default-568h@2x.png in Resources */,
+				BBA75E5219E60825003049B7 /* editor-duplicate-tool@2x.png in Resources */,
 				8E11CC4D1759BB55004D2284 /* InfoPlist.strings in Resources */,
 				8E11CC521759BB5E004D2284 /* MainStoryboard_iPad.storyboard in Resources */,
+				BBA75E5019E603BF003049B7 /* editor-delete-sticker@2x.png in Resources */,
 				8E11CC531759BB5E004D2284 /* MainStoryboard_iPhone.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

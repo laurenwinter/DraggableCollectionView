@@ -122,8 +122,8 @@
     NSMutableArray *sectionData = [sections objectAtIndex:selectedPath.section];
     
     // Copy and insert the cell data
-    NSString *cellData = [sectionData objectAtIndex:selectedPath.item];
-    [sectionData insertObject:cellData atIndex:selectedPath.row];
+    NSString *cellData = [NSString stringWithFormat:@"%@ copy", [sectionData objectAtIndex:selectedPath.item]];
+    [sectionData insertObject:cellData atIndex:selectedPath.row+1];
     
     // Update the collection view
     [self.collectionView insertAfterSelectedCell];

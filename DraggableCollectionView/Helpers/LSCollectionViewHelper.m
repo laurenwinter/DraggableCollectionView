@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
 @interface LSCollectionViewHelper ()
 {
     NSIndexPath *lastIndexPath;
+    NSIndexPath *destinationIndexPath;
     UIImageView *mockCell;
     CGPoint mockCenter;
     CGPoint fingerTranslation;
@@ -235,6 +236,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
                 return;
             }
             _selectedIndexPath = indexPath;
+            destinationIndexPath = indexPath;
             // Create mock cell to drag around
             UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
             cell.highlighted = NO;
@@ -281,6 +283,10 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
             if(self.layoutHelper.fromIndexPath == nil) {
                 return;
             }
+            
+            _selectedIndexPath = self.layoutHelper.toIndexPath;
+            destinationIndexPath = self.layoutHelper.toIndexPath;
+            
             // Tell the data source to move the item
             [(id<UICollectionViewDataSource_Draggable>)self.collectionView.dataSource collectionView:self.collectionView
 																				 moveItemAtIndexPath:self.layoutHelper.fromIndexPath
@@ -293,7 +299,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
                 self.layoutHelper.toIndexPath = nil;
             } completion:nil];
 
-            // Switch mock for cell
+            // Move the mock cell
             UICollectionViewLayoutAttributes *layoutAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.layoutHelper.hideIndexPath];
             [UIView
              animateWithDuration:0.3
@@ -476,26 +482,35 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
 {
     [mockCell removeFromSuperview];
     mockCell = nil;
-    [self.collectionView performBatchUpdates:^{
-        self.layoutHelper.hideIndexPath = nil;
-        
-        NSArray* itemPaths = @[_selectedIndexPath];
-        [self.collectionView deleteItemsAtIndexPaths:itemPaths];
-        _selectedIndexPath = nil;
-    } completion:nil];
+
+    if (destinationIndexPath) {
+        [self.collectionView performBatchUpdates:^{
+            self.layoutHelper.hideIndexPath = nil;
+            NSArray* itemPaths = @[destinationIndexPath];
+            [self.collectionView deleteItemsAtIndexPaths:itemPaths];
+        } completion:^(BOOL finished) {
+            _selectedIndexPath = nil;
+            destinationIndexPath = nil;
+        }];
+    }
 }
 
 - (void)insertAfterSelectedCell
 {
     [mockCell removeFromSuperview];
     mockCell = nil;
-    [self.collectionView performBatchUpdates:^{
-        self.layoutHelper.hideIndexPath = nil;
-        
-        NSArray* itemPaths = @[_selectedIndexPath];
-        [self.collectionView insertItemsAtIndexPaths:itemPaths];
-        _selectedIndexPath = nil;
-    } completion:nil];
+    if (destinationIndexPath) {
+        NSIndexPath *nextPath = [NSIndexPath indexPathForRow:destinationIndexPath.row+1 inSection:destinationIndexPath.section] ;
+        [self.collectionView performBatchUpdates:^{
+            self.layoutHelper.hideIndexPath = nil;
+            NSArray* itemPaths = @[nextPath];
+            [self.collectionView insertItemsAtIndexPaths:itemPaths];
+        } completion:^(BOOL finished) {
+            [self.collectionView scrollToItemAtIndexPath:nextPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+            _selectedIndexPath = nil;
+            destinationIndexPath = nil;
+        }];
+    }
 }
 
 @end

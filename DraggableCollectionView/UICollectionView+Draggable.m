@@ -65,6 +65,11 @@
     return [self getHelper].selectedIndexPath;
 }
 
+- (void)setSelectedIndexPath:(NSIndexPath*)indexPath
+{
+    [self getHelper].selectedIndexPath = indexPath;
+}
+
 - (void)deleteSelectedCell
 {
     [[self getHelper] deleteSelectedCell];

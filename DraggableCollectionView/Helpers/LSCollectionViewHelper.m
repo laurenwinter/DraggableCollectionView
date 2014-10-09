@@ -234,6 +234,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
                   canMoveItemAtIndexPath:indexPath]) {
                 return;
             }
+            _selectedIndexPath = indexPath;
             // Create mock cell to drag around
             UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
             cell.highlighted = NO;
@@ -356,6 +357,7 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
          mockCell.transform = CGAffineTransformMakeScale(1.f, 1.f);
      }
      completion:^(BOOL finished) {
+         _selectedIndexPath = nil;
          [mockCell removeFromSuperview];
          mockCell = nil;
          self.layoutHelper.hideIndexPath = nil;
@@ -468,6 +470,37 @@ typedef NS_ENUM(NSInteger, _ScrollingDirection) {
     // Warp items while scrolling
     NSIndexPath *indexPath = [self indexPathForItemClosestToPoint:mockCell.center];
     [self warpToIndexPath:indexPath];
+}
+
+- (void)deleteSelectedCell
+{
+//    [self.collectionView performBatchUpdates:^{
+//        self.layoutHelper.hideIndexPath = nil;
+//        [self.collectionView.collectionViewLayout invalidateLayout];
+//    } completion:nil];
+    
+    [self.collectionView performBatchUpdates:^{
+        self.layoutHelper.hideIndexPath = nil;
+        
+        NSArray* itemPaths = @[_selectedIndexPath];
+        // Now delete the items from the collection view.
+        [self.collectionView deleteItemsAtIndexPaths:itemPaths];
+    } completion:nil];
+    
+    [mockCell removeFromSuperview];
+    mockCell = nil;
+    
+//    if (_selectedIndexPath) {
+//        [self.collectionView performBatchUpdates:^{
+//            //[self.collectionView moveItemAtIndexPath:self.layoutHelper.fromIndexPath toIndexPath:self.layoutHelper.toIndexPath];
+//            [mockCell removeFromSuperview];
+//            mockCell = nil;
+//            NSIndexPath *toPath = [NSIndexPath indexPathForRow:_selectedIndexPath.row-1 inSection:_selectedIndexPath.section]; ;
+//            self.layoutHelper.toIndexPath = toPath;
+//            [self.collectionView.collectionViewLayout invalidateLayout];
+//            _selectedIndexPath = nil;
+//        } completion:nil];
+//    }
 }
 
 @end

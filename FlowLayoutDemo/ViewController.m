@@ -108,10 +108,16 @@
 
 - (void)deleteTapHandler:(UITapGestureRecognizer *)sender
 {
+
+    NSIndexPath *selectedPath = _collectionView.selectedIndexPath;
+    [sections[selectedPath.section] removeObjectAtIndex:selectedPath.row];
+    
+    [self.collectionView deleteSelectedCell];
 }
 
 - (void)duplicateTapHandler:(UITapGestureRecognizer *)sender
 {
+    
 }
 
 - (UIImage *)imageFromCell:(UICollectionViewCell *)cell {

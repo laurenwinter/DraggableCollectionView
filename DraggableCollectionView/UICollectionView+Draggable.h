@@ -13,4 +13,7 @@
 @property (nonatomic, assign) UIEdgeInsets scrollingEdgeInsets;
 @property (nonatomic, assign) CGFloat scrollingSpeed;
 @property (nonatomic, retain) UIView *destinationView;
+@property (nonatomic, assign) NSIndexPath *selectedIndexPath;
+
+- (void)deleteSelectedCell;
 @end

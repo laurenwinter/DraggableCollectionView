@@ -17,5 +17,8 @@
 @property (nonatomic, assign) CGFloat scrollingSpeed;
 @property (nonatomic, assign) BOOL enabled;
 @property (nonatomic, assign) UIView *destinationView;
+@property (nonatomic, assign) NSIndexPath *selectedIndexPath;
+
+- (void)deleteSelectedCell;
 
 @end

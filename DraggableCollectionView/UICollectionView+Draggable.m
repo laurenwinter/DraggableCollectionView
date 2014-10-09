@@ -59,4 +59,14 @@
 {
     [self getHelper].destinationView = destinationView;
 }
+
+- (NSIndexPath*)selectedIndexPath
+{
+    return [self getHelper].selectedIndexPath;
+}
+
+- (void)deleteSelectedCell
+{
+    [[self getHelper] deleteSelectedCell];
+}
 @end

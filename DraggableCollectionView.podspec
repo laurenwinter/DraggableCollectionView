@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'DraggableCollectionView'
-  s.version      = ‘2.0.3’
+  s.version      = ‘2.0.4’
   s.summary      = 'Extension for the UICollectionView and UICollectionViewLayout that allows a user to move items with drag and drop.'
   s.homepage     = 'https://github.com/laurenwinter/DraggableCollectionView'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }

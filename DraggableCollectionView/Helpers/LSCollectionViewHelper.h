@@ -21,5 +21,6 @@
 
 - (void)deleteSelectedCell;
 - (void)insertAfterSelectedCell;
+- (void)deselectSelectedCell;
 
 @end
